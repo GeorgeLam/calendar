@@ -19,7 +19,7 @@ delBtnEnable = function () {
     for (let i = 0; i < delBtn.length; i++){
         delBtn[i].addEventListener("click", () => {
             console.log(i + " " + delBtn.length)
-            if (i == delBtn.length && i < 5){i = delBtn.length -1} ////Corrected the penultimate error since the loop was prematurely ending otherwise. However, setting i to -1 or using <= delBtn.length initially would have caused errors, since would mean applying aEL to non-existent items -> causes the same error.
+            if (i >= delBtn.length){i = delBtn.length -1; console.log("Correcting")} ////Corrected the penultimate error since the loop was prematurely ending otherwise. However, setting i to -1 or using <= delBtn.length initially would have caused errors, since would mean applying aEL to non-existent items -> causes the same error.
             inputs.pop();
             delBtn[i].parentElement.remove();
             //if (i !== delBtn.length && i < 10){i++;};
