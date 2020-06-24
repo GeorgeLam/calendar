@@ -29,7 +29,8 @@ dayNum.forEach(item => {
 
     let eventAdder = document.querySelector("#addEventTitle")
         eventAdder.textContent = `Add an event to June ${item.innerText}`
-
+        clickedDate = item.innerText;
+        updateList();
     })});
 
 ///////////////
@@ -39,6 +40,7 @@ let items = [];
 
 class ListItem {
   constructor(name) {
+    this.date = clickedDate; 
     this.id = items.length;
     this.name = name;
     this.color = "#000000";
@@ -58,21 +60,33 @@ function addListItem () {
   items.push(new ListItem(com.value))
   console.log("Item Added to List")
   items.forEach(item => console.log("List items are: " + item.name))
+  com.value = "";
   updateList();
+  buttonActivate();
 };
 
 function buttonActivate () {
   console.log("Activating buttons!")
-  for (let i = 0; i < items.length; i++){
-    console.log(i)
-    document.querySelectorAll(".editBtn")[i].addEventListener("click", editItem)
-  }
-  for (let i = 0; i < items.length; i++) {
-    document.querySelectorAll(".delBtn")[i].addEventListener("click", delItem)
+  itemsOnThisDay = items.filter(item => item.date == clickedDate)
+  console.log("Amt of items today: " + itemsOnThisDay.length);
+  if (document.querySelectorAll(".editBtn").length != 0 && document.querySelectorAll(".delBtn").length != 0){
+      for (let i = 0; i < itemsOnThisDay.length; i++){
+        console.log(document.querySelectorAll(".editBtn"))
+        document.querySelectorAll(".editBtn")[i].addEventListener("click", editItem)
+      }
+    for (let i = 0; i < itemsOnThisDay.length; i++) {
+        document.querySelectorAll(".delBtn")[i].addEventListener("click", delItem)
+      }
   }
 }
 
+//24/06: new error. aEL is undefined on like 74. that's because the for loop is iterating through full length of items array - which includes items that are on a range of dates. this doesn't match with the qty of items found in the DOM, so an error is thrown.
+//solution1: create new array objs for each date
+//solution2: change the for loop into a foreach
+//solution3: keep for, 'items.len' -> sth that accounts for items.len but only on a given day (perhaps need to incorporate new arr variables that are based on a .filter of items)
+
 function editItem(e){
+  console.log("Edit item code workS!")
   parentIdName = e.path[2].id
   let parentIdNum = parentIdName[parentIdName.length-1]
   let editBox = document.createElement('input')
@@ -98,6 +112,8 @@ function editItem(e){
   }
 
 function delItem(e) {
+  console.log("Del item code workS!")
+
   parentIdName = e.path[3].id
   console.log("The ID number is: " + parentIdName)
   let parentIdNum = parentIdName[parentIdName.length - 1]
@@ -120,7 +136,7 @@ function updateList(){
   console.log("Now updating...")
   text.innerHTML = "";
   items.forEach((item, id) => {
-  text.innerHTML += 
+  (item.date == clickedDate) ? text.innerHTML += 
     `<li>
       <div id="list-text${item.id}">${item.name}
       <div class="list"><a class="delBtn">
@@ -128,7 +144,7 @@ function updateList(){
       <a class="editBtn">Edit</a>
       </div>
       </div>
-    </li>`
+    </li>` : ""
   }
   )
   buttonActivate();
