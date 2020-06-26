@@ -12,13 +12,28 @@ let listElement;
 let rHS = document.querySelector("#rHS")
 
 let calendar = document.querySelector("#calendar");
-thisMonthDays = new Date();
+let dateObj = new Date();
+let monthHas30Days = [3, 5, 8, 10];
 
-for (let i = 1; i <= 30; i++) {
+let testObj = ["Arra", "Bulbasaur", "Cats"];
+test2 = testObj.filter(item => item.match(/sau/))
+console.log(test2);
+
+thisMonth = dateObj.getMonth(); //calculating number of days in the month
+thisMonth == 1 && (dateObj.getFullYear() % 4 == 0) ? daysInMonth = 29 
+: thisMonth == 1 && (dateObj.getFullYear() % 4) ? daysInMonth = 28
+: monthHas30Days.includes(thisMonth) ? daysInMonth = 30 
+: daysInMonth = 31;
+
+for (let i = 1; i <= daysInMonth; i++) {
     let dates = document.createElement("DIV");
     dates.textContent = i;
     dates.className = "dayNum"
     calendar.appendChild(dates)
+    if (i==dateObj.getDate()){
+      dates.classList.add("today")
+      console.log(dates.classList);
+      document.querySelector(".today").style.color = "red"}
 }
 
 const dayNum = document.querySelectorAll(".dayNum");
@@ -31,7 +46,10 @@ dayNum.forEach(item => {
         eventAdder.textContent = `Add an event to June ${item.innerText}`
         clickedDate = item.innerText;
         updateList();
-    })});
+      }
+    )
+  }
+);
 
 ///////////////
 
@@ -49,12 +67,7 @@ class ListItem {
   }
 }
 
-
-
-
-
 btn.addEventListener("click", addListItem);
-
 
 function addListItem () {
   items.push(new ListItem(com.value))
@@ -86,30 +99,92 @@ function buttonActivate () {
 //solution3: keep for, 'items.len' -> sth that accounts for items.len but only on a given day (perhaps need to incorporate new arr variables that are based on a .filter of items)
 
 function editItem(e){
-  console.log("Edit item code workS!")
-  parentIdName = e.path[2].id
+  /*
+  let elemArr = [];
+  paths = e.path;
+  console.log(e.path);
+  //searchStr = /list-text/
+  for (let i = 0; i < paths.length; i++){
+      //26/06 ISSUE! - undefined is returned since for some i values, the element being iterated doesn't have an id, so it throws an error...
+    elemArr.push(e.path[i].id);
+    //console.log(elemArr);
+
+  }
+  //newAra = elemArr.filter(item => item.match(/list-text/))
+  //console.log(newAra);
+
+  for (item in elemArr){
+    if(item.match(/list-text./)){console.log("hi")};
+  }
+                                       
+    //if (e.path[i].id.match(/list-text/)) { parentIdNuma = 2};
+    //if(e.path[i].id.includes(/list-text/)){parentIdNuma = i}
+  
+  //console.log(parentIdNuma);
+  //console.log(paths.find(item => item == /li/));
+  //let parentIdName = paths.filter(item => item.find(/list-text/))
+  //console.log("You got... " + parentIdName)
+
+  */
+
+  console.log(e.path[2].id)
+
+  for (i = 0; i < e.path.length; i++) {
+    if (/list-text/.test(e.path[i].id)) {pathNum = i};
+  }
+
+  console.log(pathNum)
+
+  parentIdName = e.path[pathNum].id
   let parentIdNum = parentIdName[parentIdName.length-1]
+  let parentEl = document.querySelector(`#list-text${parentIdNum}`);
   let editBox = document.createElement('input')
   editBox.id = "itemEditor"
-  let parentEl = document.querySelector(`#list-text${parentIdNum}`);
+  editBox.value = document.querySelector(`#list-item${parentIdNum}`).innerText;
+
+
   parentEl.appendChild(editBox)
   let saveEdit = document.createElement('button')
   saveEdit.id = "saveItem"
   saveEdit.innerText = "Save Edit"
   parentEl.appendChild(saveEdit)
-  parentEl.children[0].children[1].style.display = "none";
-  console.log(e.path[2].children[2])
-  e.path[2].children[2].addEventListener("click", () => {
+
+//TEST STARTS1111-----------
+
+  console.log(e.path[pathNum].children)
+  console.log(parentEl.children[0].id.match(/item0/))
+  console.log(/item/.test(parentEl.children[0].id))
+  console.log(parentEl.children[1].id.includes("item0"))
+  console.log(parentEl.children[2].id)
+  console.log(parentEl.children[3].id.includes("item0"))
+ 
+
+  for (i = 0; i < parentEl.children.length; i++){
+    if (/saveItem/.test(parentEl.children[i].id)){saveBtnPath = i};
+  }
+
+////////end------//////
+
+  for (i = 0; i < parentEl.children.length; i++) {
+    if ((parentEl.children[i].classList[0] === "list")) {pathNumList = i};
+  }
+
+  for (i = 0; i < parentEl.children[pathNumList].children.length; i++) {
+    if ((parentEl.children[pathNumList].children[i].classList[0] === "editBtn")) { pathNumEditBtn = i };
+  }
+
+  parentEl.children[pathNumList].children[pathNumEditBtn].style.display = "none";        /////////////////////
+
+
+  e.path[pathNum].children[saveBtnPath].addEventListener("click", () => {
     s = items.map(item => (item.id == parentIdNum))
-
-    console.log("Id should be..." + s.indexOf(true))
-
     items[s.indexOf(true)].name = editBox.value;
     console.log(items);
-    updateList();
-    //YOU NEED TO FIND THE INDEX FOR WHICH ID IS xxx, set the variable to the index and then pass that in
+    updateList();    
 })
   }
+
+
 
 function delItem(e) {
   console.log("Del item code workS!")
@@ -138,7 +213,7 @@ function updateList(){
   items.forEach((item, id) => {
   (item.date == clickedDate) ? text.innerHTML += 
     `<li>
-      <div id="list-text${item.id}">${item.name}
+      <div id="list-text${item.id}"><span id = "list-item${item.id}">${item.name}</span>
       <div class="list"><a class="delBtn">
       <i class="gg-close-o"></i></a>
       <a class="editBtn">Edit</a>
@@ -152,74 +227,6 @@ function updateList(){
 
 
 
-
-
-
-
 function listChecker () {
   return items.forEach(item => item.name)
 }
-
-    /////////////////////////////////
-
-/*
-btn.addEventListener("click", () => {
-  inputs.push(com.value);
-
-  text.innerHTML += `<li>
-                <div id="list-text${newAdded}">${inputs[newAdded]}</div>
-                <div class="list"><a class="delBtn">
-                    <i class="gg-close-o"></i></a>
-                <a class="editBtn">Edit</a>
-                </div>
-            </li>`;
-  newAdded++;
-  //console.log(text.innerHTML);
-  delBtnEnable();
-  saveEditCheck();
-});
-//Cleaned
-
-delBtnEnable = function () {
-  for (let i = 0; i < delBtn.length; i++) {
-    delBtn[i].addEventListener("click", () => {
-      if (i >= delBtn.length) {i = delBtn.length - 1;} 
-      delBtn[i].parentElement.parentElement.remove();
-    });
-  } //end of for loop on delBtn
-
-  for (let i = 0; i < editBtn.length; i++) {
-    editBtn[i].addEventListener("click", () => {
-        listElement = i;
-       //let numb = editBtn${newAdded}.parentElement.parentElement.firstElementChild.id[saveEdit[i].parentElement.parentElement.firstElementChild.id.length - 1];
-            //console.log("Woah" + numb);
-        console.log("Hello" +  [i] +" " + editBtn.length); //if add two items, delete first, then can't edit 2nd
-      //console.log(editBtn[i].parentElement.previousElementSibling.innerText);
-
-      //if (editBtn.length == 1){listElement = 0};
-
-      console.log(editBtn[0] + "h" + editBtn[1])
-        editBtn[listElement].parentElement.previousElementSibling.innerHTML = `<input type="text" class="newText" value="${editBtn[listElement].parentElement.previousElementSibling.innerText}"><button class="saveEdit">Save Edit</button>`;
-      saveEditCheck();
-    });
-  }
-};
-
-let saveEditCheck = function () {
-  for (let i = 0; i < saveEdit.length; i++) {
-    saveEdit[i].addEventListener("click", () => {
-      if (i >= saveEdit.length) {i = saveEdit.length - 1};
-
-      let savedNum = i;
-      let numb =
-        saveEdit[i].parentElement.parentElement.firstElementChild.id[saveEdit[i].parentElement.parentElement.firstElementChild.id.length -1];
-
-      document.querySelector(`#list-text${numb}`).innerHTML =
-        newTexts[savedNum].value;
-    });
-  }
-};
-
-delBtnEnable();
-
-*/
