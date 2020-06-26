@@ -13,8 +13,12 @@ let rHS = document.querySelector("#rHS")
 
 let calendar = document.querySelector("#calendar");
 let dateObj = new Date();
-let monthHas30Days = [3, 5, 8, 10];
 
+document.querySelector(".todayDate").innerText = dateObj.getDate();
+dayConvert = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+document.querySelector(".todayDay").innerText = dayConvert[dateObj.getDay()];
+
+let monthHas30Days = [3, 5, 8, 10];
 thisMonth = dateObj.getMonth(); //calculating number of days in the month
 thisMonth == 1 && (dateObj.getFullYear() % 4 == 0) ? daysInMonth = 29 
 : thisMonth == 1 && (dateObj.getFullYear() % 4) ? daysInMonth = 28
@@ -36,7 +40,7 @@ const dayNum = document.querySelectorAll(".dayNum");
 
 dayNum.forEach(item => {
     item.addEventListener("click", () => { console.log(item.innerText)
-    rHS.style.display = "flex";
+    rHS.style.visibility = "visible";
     com.focus();
 
     let eventAdder = document.querySelector("#addEventTitle")

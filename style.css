@@ -1,40 +1,70 @@
 *{
     margin: 0px;
+    padding: 0px;
 }
 
 body {
-/*background-color: #4ab8e1;*/
-background-color: #000000;
-}
-
-#left{
-    margin: auto;
+ background: url(img/bg.jpg) no-repeat center fixed;     
+    background-size: cover;
 }
 
 #container{
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: top;
-  padding: 2em;
   margin: auto;
 }
 
-h1{
-    color: #ffab2d;
-    font-family: 'Lato', sans-serif;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+.left{
+    width: 25vw;
+    height: 100vh;
+    background-color: rgba(219, 75, 75, 0.3);
+    display: flex;
+    flex-direction: column;
 }
 
+.chosenDate{
+    color: white;
+    margin: auto;
+    height: 50vh;
+    padding-top: 15vh;
+}
+
+.chosenDate h1{
+    font-size: 6rem;
+    padding: 1vh;
+    font-family: 'Noto Sans', sans-serif;
+}
+.chosenDate h3{
+    font-size: 1.5rem;
+        font-family: 'Source Sans Pro', sans-serif;
+
+}
+
+.chosenDate h1, .chosenDate h3{
+    text-align: center;
+}
+
+
+
 #rHS{
-  margin: 10px 0px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: rgb(138, 138, 138);
-  font-family: 'Lato', sans-serif;
-  display: none;
+    margin: auto;
+    align-items: flex-start;
+    padding-top: 20vh;
+    color: white;
+    font-family: 'Lato', sans-serif;
+    visibility: hidden;
+    height: 100vh;
+}
+
+#rHS h2{
+    padding: 1em;
+}
+
+#rHS #left{
+    width: 100%;
+    text-align: center;
 }
 
 
@@ -54,25 +84,51 @@ padding-right: 2em;
 display: block;
 }
 
+#cal{
+    margin: auto;
+    width: 60%;
+    height: 65vh;
+}
+
+.monthLine{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-size: 3rem;
+
+}
+
+.monthLine h3{
+    color: white;
+}
+
+h1{
+    color: white;
+    font-size: 3rem;
+    font-family: 'Source Sans Pro', sans-serif;
+    text-align: center;
+}
+
 #calendar{
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    
-
-    width: 50%;
+    gap: 1em;
+    height: 70%;
+    width: 100%;
     color: white;
     font-family: 'Lato', sans-serif;
-    padding: 2em 0em;
 }
 
 #calendar .day, .dayNum{
-        box-sizing: border-box;
-cursor: default;
+    box-sizing: border-box;
+    cursor: default;
     text-align: center;
     padding: 10px;
 }
 
 #calendar .dayNum:hover{
-    background-color: #ffab2d;
+    background-color: rgba(165, 165, 165, 0.425);
     cursor: pointer;
 }
