@@ -6,6 +6,7 @@
 body {
  background: url(img/bg.jpg) no-repeat center fixed;     
     background-size: cover;
+    overflow: hidden;
 }
 
 #container{
@@ -16,6 +17,10 @@ body {
   margin: auto;
 }
 
+
+
+
+/*       LEFT PANE        */
 .left{
     width: 25vw;
     height: 100vh;
@@ -27,8 +32,8 @@ body {
 .chosenDate{
     color: white;
     margin: auto;
-    height: 50vh;
-    padding-top: 15vh;
+    height: 70%;
+    padding-top: 10vh;
 }
 
 .chosenDate h1{
@@ -41,33 +46,107 @@ body {
         font-family: 'Source Sans Pro', sans-serif;
 
 }
-
 .chosenDate h1, .chosenDate h3{
     text-align: center;
 }
 
 
+#daysEventsTop{
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
 
-#rHS{
+.eventInput{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: auto;
+    width: 80%;
+    padding-bottom: 1em;
+}
+
+#addBtn{
+    border: none;
+    height: 20px;
+}
+
+#eventAdd{
+    border: 0;
+    border-radius: 50px;
+    color: white;
+    height: 20px;
+    width: 80%;
+    padding-left: 5px;
+    background-color: rgba(165, 165, 165, 0.425);
+}
+
+#eventAdd::placeholder{
+    color: rgb(255, 233, 233);
+    text-align: center;
+}
+
+#daysEvents{
     margin: auto;
     align-items: flex-start;
-    padding-top: 20vh;
     color: white;
     font-family: 'Lato', sans-serif;
     visibility: hidden;
-    height: 100vh;
+    height: 100%;
+    width: 100%;
 }
 
-#rHS h2{
-    padding: 1em;
+#daysEvents h2{
+    padding: 0 0 1em 0;
 }
 
-#rHS #left{
+#daysEvents #daysEventsTop{
     width: 100%;
     text-align: center;
 }
 
+#addEventTitle{
+    width: 90%;
+    margin: auto;
+}
 
+.inlineText{
+    display: inline-block;
+}
+
+/*      EVENTS LIST STARTS HERE     */
+
+#listContainer{
+    height: 100%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    }
+
+#listItems{
+    background-color: rgb(7, 13, 29);
+    height: 100%;
+    width: 100%;
+}
+
+.singleItem{
+    display: flex;
+    flex-direction: row;
+    min-height: 50px;
+}
+
+.itemText{
+    background: green;
+    border-radius: 10px;
+    width: 100%;
+}
+
+#listItems li{
+    background-color: gray;
+    padding: 10px 0;
+    border: sandybrown 1px solid;
+    width: 80%;
+}
 
 .list{
     display: flex;
@@ -83,6 +162,14 @@ ol li{
 padding-right: 2em;
 display: block;
 }
+
+
+
+
+
+
+
+/*      LEFT PANE ENDS      */
 
 #cal{
     margin: auto;

@@ -1,15 +1,11 @@
-let btn = document.querySelector("#smash");
-let text = document.querySelector("#txt");
-let input = document.querySelector("#smash");
-let com = document.querySelector("#com");
+let btn = document.querySelector("#addBtn");
+let listItems = document.querySelector("#listItems");
+let eventAdd = document.querySelector("#eventAdd");
 let delBtn = document.getElementsByClassName("delBtn");
 let editBtn = document.getElementsByClassName("editBtn");
-let newTexts = document.getElementsByClassName("newText");
 let saveEdit = document.getElementsByClassName("saveEdit");
-let newAdded = 0;
 let inputs = [];
-let listElement;
-let rHS = document.querySelector("#rHS")
+let daysEvents = document.querySelector("#daysEvents")
 
 let calendar = document.querySelector("#calendar");
 let dateObj = new Date();
@@ -40,11 +36,11 @@ const dayNum = document.querySelectorAll(".dayNum");
 
 dayNum.forEach(item => {
     item.addEventListener("click", () => { console.log(item.innerText)
-    rHS.style.visibility = "visible";
-    com.focus();
+    daysEvents.style.visibility = "visible";
+    eventAdd.focus();
 
     let eventAdder = document.querySelector("#addEventTitle")
-        eventAdder.textContent = `Add an event to June ${item.innerText}`
+      eventAdder.innerHTML = `<span class="inlineText">Add an event to <span class="inlineText"> June ${item.innerText}`
         clickedDate = item.innerText;
         updateList();
       }
@@ -66,16 +62,15 @@ class ListItem {
 }
 
 btn.addEventListener("click", addListItem);
-com.addEventListener("keyup", e => {
-  console.log(e.keyCode)
+eventAdd.addEventListener("keyup", e => {
   if (e.keyCode === 13){addListItem()}
 });
 
 function addListItem () {
-  items.push(new ListItem(com.value))
+  items.push(new ListItem(eventAdd.value))
   console.log("Item Added to List")
   items.forEach(item => console.log("List items are: " + item.name))
-  com.value = "";
+  eventAdd.value = "";
   updateList();
   buttonActivate();
 };
@@ -157,11 +152,11 @@ function delItem(e) {
 
 function updateList(){
   console.log("Now updating...")
-  text.innerHTML = "";
+  listItems.innerHTML = "";
   items.forEach((item, id) => {
-  (item.date == clickedDate) ? text.innerHTML += 
-    `<li>
-      <div id="list-text${item.id}"><span id = "list-item${item.id}">${item.name}</span>
+    (item.date == clickedDate) ? listItems.innerHTML += 
+    `<li class = "singleItem">
+      <div class="itemText" id="list-text${item.id}"><span id = "list-item${item.id}">${item.name}</span>
       <div class="list"><a class="delBtn">
       <i class="gg-close-o"></i></a>
       <a class="editBtn">Edit</a>
