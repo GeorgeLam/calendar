@@ -6,6 +6,8 @@ let editBtn = document.getElementsByClassName("editBtn");
 let saveEdit = document.getElementsByClassName("saveEdit");
 let inputs = [];
 let daysEvents = document.querySelector("#daysEvents")
+let listOptions = document.querySelector(".listOptions")
+let editMode = 0;
 
 let calendar = document.querySelector("#calendar");
 let dateObj = new Date();
@@ -32,10 +34,22 @@ for (let i = 1; i <= daysInMonth; i++) {
       document.querySelector(".today").style.color = "red"}
 }
 
+function showMonthEvents(){
+  console.log("Hi months")
+  daysEvents.style.visibility = "visible";
+  document.querySelector("#daysEventsTop").style.visibility = "hidden";
+  document.querySelector("#listContainer").style.visibility = "hidden";
+}
+
+//showMonthEvents();
+
 const dayNum = document.querySelectorAll(".dayNum");
 
 dayNum.forEach(item => {
-    item.addEventListener("click", () => { console.log(item.innerText)
+    item.addEventListener("click", () => { 
+    document.querySelector("#daysEventsTop").style.visibility = "visible";
+      document.querySelector("#listContainer").style.visibility = "visible";  
+    console.log(item.innerText)
     daysEvents.style.visibility = "visible";
     eventAdd.focus();
 
@@ -46,6 +60,11 @@ dayNum.forEach(item => {
       }
     )
   }
+);
+
+document.querySelector(".cancelSelected").addEventListener("click", () =>{
+  daysEvents.style.visibility = "hidden"
+}
 );
 
 //let currentItems = 0;
@@ -61,9 +80,9 @@ class ListItem {
   }
 }
 
-btn.addEventListener("click", addListItem);
+//btn.addEventListener("click", addListItem);
 eventAdd.addEventListener("keyup", e => {
-  if (e.keyCode === 13){addListItem()}
+  if (e.keyCode === 13 && eventAdd.value != ""){addListItem()}
 });
 
 function addListItem () {
@@ -79,14 +98,15 @@ function buttonActivate () {
   console.log("Activating buttons!")
   itemsOnThisDay = items.filter(item => item.date == clickedDate)
   console.log("Amt of items today: " + itemsOnThisDay.length);
-  if (document.querySelectorAll(".editBtn").length != 0 && document.querySelectorAll(".delBtn").length != 0){
-      for (let i = 0; i < itemsOnThisDay.length; i++){
-        console.log(document.querySelectorAll(".editBtn"))
-        document.querySelectorAll(".editBtn")[i].addEventListener("click", editItem)
+
+  if (document.querySelectorAll(".itemText").length != 0 && document.querySelectorAll(".listOptions").length != 0){
+    for (let i = 0; i < itemsOnThisDay.length; i++){
+        
+        document.querySelectorAll(".itemText")[i].addEventListener("click", editItem);
       }
-    for (let i = 0; i < itemsOnThisDay.length; i++) {
-        document.querySelectorAll(".delBtn")[i].addEventListener("click", delItem)
-      }
+      for (let i = 0; i < itemsOnThisDay.length; i++) {
+        document.querySelectorAll(".listOptions")[i].addEventListener("click", delItem)
+    }
   }
 }
 
@@ -99,16 +119,22 @@ function editItem(e){
   let parentIdNum = parentIdName[parentIdName.length-1]
   let parentEl = document.querySelector(`#list-text${parentIdNum}`);
 
-  let editBox = document.createElement('input')
-  editBox.id = "itemEditor"
-  editBox.value = document.querySelector(`#list-item${parentIdNum}`).innerText;
-  parentEl.appendChild(editBox)
-  editBox.focus();
+  if (editMode == 0 && document.querySelectorAll("#itemEditor").length < 1){
+    console.log("New box made")
+    var editBox = document.createElement('input')
+    editBox.id = "itemEditor"
+    editBox.value = document.querySelector(`#list-item${parentIdNum}`).innerText;
+    parentEl.appendChild(editBox)
+    editBox.focus();
+    editMode = 1;
+    console.log(document.querySelectorAll("#itemEditor").length)
 
   let saveEdit = document.createElement('button')
   saveEdit.id = "saveItem"
   saveEdit.innerText = "Save Edit"
-  parentEl.appendChild(saveEdit)
+  //parentEl.appendChild(saveEdit)
+
+  document.querySelector(`#list-item${parentIdNum}`).style.display = "none";
  
   for (i = 0; i < parentEl.children.length; i++){
     if (/saveItem/.test(parentEl.children[i].id)){saveBtnPath = i};
@@ -117,10 +143,10 @@ function editItem(e){
     if ((parentEl.children[i].classList[0] === "list")) {pathNumList = i};
   }
   for (i = 0; i < parentEl.children[pathNumList].children.length; i++) {
-    if ((parentEl.children[pathNumList].children[i].classList[0] === "editBtn")) { pathNumEditBtn = i };
+    if ((parentEl.children[pathNumList].children[i].classList[0] === "itemText")) { pathNumEditBtn = i };
   }
 
-  parentEl.children[pathNumList].children[pathNumEditBtn].style.display = "none";
+  //parentEl.children[pathNumList].children[pathNumEditBtn].style.display = "none";
 
   function acceptEdit() {
     s = items.map(item => (item.id == parentIdNum))
@@ -128,19 +154,20 @@ function editItem(e){
     console.log(items);
     updateList(); }
 
-  e.path[pathNum].children[saveBtnPath].addEventListener("click", acceptEdit)
+  //e.path[pathNum].children[saveBtnPath].addEventListener("click", acceptEdit)
   
-  editBox.addEventListener("keyup", e => {if(e.keyCode === 13) acceptEdit()})
+    editBox.addEventListener("keyup", e => { if (e.keyCode === 13 && editBox.value != "") acceptEdit()})
 
+  editMode = 0;
+
+  }
 }
 
 
 function delItem(e) {
-  for (i = 0; i < e.path.length; i++) {
-    if (/list-text/.test(e.path[i].id)) { pathNumDelBtn = i };
-  }
+  console.log(e.path[2].children[0].id)
 
-  parentIdName = e.path[pathNumDelBtn].id 
+  parentIdName = e.path[2].children[0].id 
   console.log("The ID number is: " + parentIdName)
   let parentIdNum = parentIdName[parentIdName.length - 1]
   s = items.map(item => (item.id == parentIdNum))
@@ -157,11 +184,14 @@ function updateList(){
     (item.date == clickedDate) ? listItems.innerHTML += 
     `<li class = "singleItem">
       <div class="itemText" id="list-text${item.id}"><span id = "list-item${item.id}">${item.name}</span>
-      <div class="list"><a class="delBtn">
-      <i class="gg-close-o"></i></a>
-      <a class="editBtn">Edit</a>
+      <div class="list">
       </div>
       </div>
+
+      <div class="itemOptions">
+        <p class="listOptions">...</p>
+      </div>
+
     </li>` : ""
   }
   )
