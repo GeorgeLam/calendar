@@ -236,6 +236,10 @@ display: block;
     height: 65vh;
 }
 
+.weekdays{
+    display: flex;
+}
+
 .monthLine{
     display: flex;
     flex-direction: row;
@@ -248,6 +252,10 @@ display: block;
 
 .monthLine h3{
     color: white;
+}
+
+#backMonth, #forwardMonth{
+    cursor: pointer;
 }
 
 h1{
