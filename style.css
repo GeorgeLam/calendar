@@ -182,14 +182,10 @@ body {
     word-wrap: break-word;
 }
 
-.itemText span{
-}
-
 #itemEditor{
     width: 100%;
     height: 100%;
     resize: none;
-    scroll: none;
 }
 
 
