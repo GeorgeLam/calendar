@@ -51,12 +51,16 @@ dayNum.forEach(item => {
       document.querySelector("#listContainer").style.visibility = "visible";  
     console.log(item.innerText)
     daysEvents.style.visibility = "visible";
-    eventAdd.focus();
+    eventAdd.addEventListener("click", () =>{
+      eventAdd.placeholder = "";
+    })
 
     let eventAdder = document.querySelector("#addEventTitle")
       eventAdder.innerHTML = `<span class="inlineText">Add an event to <span class="inlineText"> June ${item.innerText}`
         clickedDate = item.innerText;
         updateList();
+        eventAdd.placeholder = "What's on today?"
+
       }
     )
   }
@@ -121,8 +125,11 @@ function editItem(e){
 
   if (editMode == 0 && document.querySelectorAll("#itemEditor").length < 1){
     console.log("New box made")
-    var editBox = document.createElement('input')
-    editBox.id = "itemEditor"
+    var editBox = document.createElement('textarea')
+    editBox.id = "itemEditor";
+    editBox.type = "textarea";
+    editBox.wrap = "hard";
+    editBox.contentEditable = "true";
     editBox.value = document.querySelector(`#list-item${parentIdNum}`).innerText;
     parentEl.appendChild(editBox)
     editBox.focus();
