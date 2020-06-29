@@ -15,9 +15,11 @@ let monthListItems = document.querySelector("#monthListItems");
 
 let calendar = document.querySelector("#calendar");
 let dateObj = new Date();
-let fsd = 0;
-currentMonth = dateObj.getMonth();
-currentYear = dateObj.getFullYear();
+presentMonth = dateObj.getMonth();
+presentYear = dateObj.getFullYear();
+
+viewingMonth = presentMonth;
+viewingYear = presentYear;
 
 
 newerDATE = new Date(2020,05,30)///////////
@@ -44,8 +46,8 @@ function daysInGivenMonth(year, month){
 
 //dayOfWeek offset for the start of each month:
 function getFirstDayOfMonth(year, month) {
-  currentMonthDateObj = new Date(year, month, 00)
-  return firstDayOfMonth = currentMonthDateObj.getDay() + 1;
+  viewingMonthDateObj = new Date(year, month, 00)
+  return firstDayOfMonth = viewingMonthDateObj.getDay() + 1;
 }
   //if 0 = Sunday, so no offset.
 
@@ -54,35 +56,43 @@ function monthName(month){
   return names[month]
 }
 
-daysInMonth = daysInGivenMonth(currentYear, currentMonth)
+daysInMonth = daysInGivenMonth(viewingYear, viewingMonth)
 
 class Month {
   constructor(monthNum) {
     this.name = monthName(monthNum);
-    this.dayCount = daysInGivenMonth(currentYear, monthNum);
+    this.dayCount = daysInGivenMonth(viewingYear, monthNum);
   }
 }
 
-mono = new Month(8);
-console.log(`${mono.name} is a month with ${mono.dayCount} days.`);
+document.querySelector(".returnMonth").addEventListener("click", () => {
+document.querySelector(".returnMonth").style.visibility = "hidden";
+viewingMonth = presentMonth;
+viewingYear = presentYear;
 
 
+console.log(viewingMonth);
+switchedMonth = new Month(viewingMonth);
+console.log(switchedMonth);
+createMonth(switchedMonth.dayCount);
+document.querySelector(".monthYear").innerText = `${switchedMonth.name} ${viewingYear}`
 
-
-
-
-
+dateActivate();
+updateMonthList();
+//cancelSelected();
+}
+);
 
 function createMonth(daysInMonth){
   while (calendar.children.length > 7) {
     calendar.removeChild(calendar.lastChild);
   }
 
-  firstDayOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
+  firstDayOfMonth = getFirstDayOfMonth(viewingYear, viewingMonth);
 
   for (let i = 0; i < firstDayOfMonth && firstDayOfMonth !== 7; i++){
     let dates = document.createElement("DIV");
-    dates.textContent = daysInGivenMonth(currentYear, currentMonth-1)-firstDayOfMonth+i+1;
+    dates.textContent = daysInGivenMonth(viewingYear, viewingMonth-1)-firstDayOfMonth+i+1;
     dates.className = "prevMonthDayNum"
     calendar.appendChild(dates)
   };
@@ -94,7 +104,7 @@ function createMonth(daysInMonth){
       dates.textContent = i;
       dates.className = "dayNum"
       calendar.appendChild(dates)
-      if (i==dateObj.getDate() && dateObj.getMonth() == currentMonth && dateObj.getFullYear() == currentYear){
+      if (i==dateObj.getDate() && dateObj.getMonth() == viewingMonth && dateObj.getFullYear() == viewingYear){
         dates.classList.add("today")
         console.log(dates.classList);
         document.querySelector(".today").classList.add("currentDate")}
@@ -102,12 +112,12 @@ function createMonth(daysInMonth){
 
 
   //Placeholder dates for days in upcoming month
-  remainderSpaceLimit = ((getFirstDayOfMonth(currentYear, currentMonth) + daysInGivenMonth(currentYear, currentMonth))>35)?42:35;
+  remainderSpaceLimit = ((getFirstDayOfMonth(viewingYear, viewingMonth) + daysInGivenMonth(viewingYear, viewingMonth))>35)?42:35;
   console.log(remainderSpaceLimit);
-  for (let i = 1; i <= (remainderSpaceLimit - (getFirstDayOfMonth(currentYear, currentMonth) + daysInGivenMonth(currentYear, currentMonth))); i++) {
-    console.log(35 - (getFirstDayOfMonth(currentYear, currentMonth) + daysInGivenMonth(currentYear, currentMonth)))
+  for (let i = 1; i <= (remainderSpaceLimit - (getFirstDayOfMonth(viewingYear, viewingMonth) + daysInGivenMonth(viewingYear, viewingMonth))); i++) {
+    console.log(35 - (getFirstDayOfMonth(viewingYear, viewingMonth) + daysInGivenMonth(viewingYear, viewingMonth)))
     console.log(i + firstDayOfMonth)
-    console.log(getFirstDayOfMonth(currentYear, currentMonth + 1))
+    console.log(getFirstDayOfMonth(viewingYear, viewingMonth + 1))
     let dates = document.createElement("DIV");
     dates.textContent = i;
     dates.className = "prevMonthDayNum"
@@ -119,8 +129,6 @@ function createMonth(daysInMonth){
 createMonth(daysInMonth);
 
 
-
-
 ////////BACK AND FWD MONTH FUNCTIONALITY/////
 
 backMonth.addEventListener("click", showPrevMonth)
@@ -128,18 +136,26 @@ forwardMonth.addEventListener("click", showNextMonth)
 
 
 function showPrevMonth (){
-  if (currentMonth == 0){
-    currentMonth = 11;
-    currentYear --;
+  if (viewingMonth == 0){
+    viewingMonth = 11;
+    viewingYear --;
   } else{
-    currentMonth--;
+    viewingMonth--;
   }
-  console.log(currentMonth);
-  switchedMonth = new Month(currentMonth);
+
+  console.log("Now viewing" + viewingMonth + ". But actual is " + presentMonth)
+  console.log(viewingMonth);
+  switchedMonth = new Month(viewingMonth);
   console.log(switchedMonth);
   createMonth(switchedMonth.dayCount);
-  document.querySelector(".monthYear").innerText = `${switchedMonth.name} ${currentYear}`
+  document.querySelector(".monthYear").innerText = `${switchedMonth.name} ${viewingYear}`
   
+  if (viewingMonth !== presentMonth || viewingYear !== presentYear){
+      document.querySelector(".returnMonth").style.visibility = "visible";
+  } else{
+    document.querySelector(".returnMonth").style.visibility = "hidden";
+  }
+
   dateActivate();
   updateMonthList();
   cancelSelected();
@@ -147,17 +163,25 @@ function showPrevMonth (){
 
 
 function showNextMonth() {
-  if (currentMonth == 11) {
-    currentMonth = 0;
-    currentYear++;
+  if (viewingMonth == 11) {
+    viewingMonth = 0;
+    viewingYear++;
   } else {
-    currentMonth++;
+    viewingMonth++;
   }
-  console.log(currentMonth);
-  switchedMonth = new Month(currentMonth);
+
+  console.log("Now viewing" + viewingMonth + ". But actual is " + presentMonth)
+  console.log(viewingMonth);
+  switchedMonth = new Month(viewingMonth);
   console.log(switchedMonth);
   createMonth(switchedMonth.dayCount);
-  document.querySelector(".monthYear").innerText = `${switchedMonth.name} ${currentYear}`
+  document.querySelector(".monthYear").innerText = `${switchedMonth.name} ${viewingYear}`
+
+  if (viewingMonth !== presentMonth || viewingYear !== presentYear) {
+    document.querySelector(".returnMonth").style.visibility = "visible";
+  } else {
+    document.querySelector(".returnMonth").style.visibility = "hidden";
+  }
 
   dateActivate();
   updateMonthList();
@@ -166,8 +190,6 @@ function showNextMonth() {
 }
 
 //////////////////////
-
-
 
 
 
@@ -206,7 +228,7 @@ function dateActivate(){
 
 
       let eventAdder = document.querySelector("#addEventTitle")
-        eventAdder.innerHTML = `<span class="inlineText">Add an event to <span class="inlineText"> ${monthName(currentMonth)} ${item.innerText}`
+        eventAdder.innerHTML = `<span class="inlineText">Add an event to <span class="inlineText"> ${monthName(viewingMonth)} ${item.innerText}`
           itemInner = item.innerText
           
           clickedDate = itemInner;
@@ -228,7 +250,7 @@ function cancelSelected(){
   console.log("hide button pressed")
   document.querySelector(".monthEvents").style.display = "block";
   daysEvents.style.visibility = "hidden";
-  document.querySelector(".currentlySelected").style.border = "none";
+  //document.querySelector(".currentlySelected").style.border = "none";
 };
 
 //let currentItems = 0;
@@ -237,9 +259,9 @@ let items = [];
 class ListItem {
   constructor(name) {
     this.date = clickedDate;
-    this.month = currentMonth;
-    this.year = currentYear; 
-    this.id = currentYear.toString() + currentMonth.toString() + clickedDate.toString() + items.length.toString();
+    this.month = viewingMonth;
+    this.year = viewingYear; 
+    this.id = viewingYear.toString() + viewingMonth.toString() + clickedDate.toString() + items.length.toString();
     this.name = name;
     this.color = "#000000";
     console.log(items)
@@ -262,7 +284,7 @@ function addListItem () {
 
 function buttonActivate () {
   console.log("Activating buttons!")
-  itemsOnThisDay = items.filter(item => item.date == clickedDate && item.month == currentMonth && item.year == currentYear)
+  itemsOnThisDay = items.filter(item => item.date == clickedDate && item.month == viewingMonth && item.year == viewingYear)
   console.log("Amt of items today: " + itemsOnThisDay.length);
 
   if (document.querySelectorAll(".itemText").length != 0 && document.querySelectorAll(".listOptions").length != 0){
@@ -354,7 +376,7 @@ function updateList(){
   console.log("Now updating...")
   listItems.innerHTML = "";
   items.forEach((item, id) => {
-    (item.date == clickedDate && item.month == currentMonth && item.year == currentYear) ? listItems.innerHTML += 
+    (item.date == clickedDate && item.month == viewingMonth && item.year == viewingYear) ? listItems.innerHTML += 
     `<li class = "singleItem">
       <div class="itemText" id="list-text${item.id}"><span id = "list-item${item.id}">${item.name}</span>
       <div class="list">
@@ -372,18 +394,29 @@ function updateList(){
   updateMonthList();
 }
 
+
+
 function updateMonthList(){
   monthListItems.innerHTML = "";
+  console.log(items)
+  sorted = items.sort(function (a, b) { return a.date - b.date });
   
-  items.forEach((item, id) => {
-    if (item.month == currentMonth && item.year == currentYear){
-      
-      
-      monthListItems.innerHTML +=
-      `<li class = "singleMonthItem">
-      <h4>On ${monthName(currentMonth)} ${item.date}:</h4>
+  sorted.forEach(item => {
+    console.log(item.date)
 
-      <div class="monthItemText" id="month-text${item.id}">
+  })
+
+  let startDate = 0;
+  sorted.forEach((item, id) => {
+    if (item.month == viewingMonth && item.year == viewingYear){
+      
+      if (startDate != item.date) {
+        monthListItems.innerHTML += 
+        `<li class = "singleMonthItem">
+      <h4>On ${monthName(viewingMonth)} ${item.date}:</h4>`};
+      startDate = item.date;
+      monthListItems.innerHTML +=
+      `<div class="monthItemText" id="month-text${item.id}">
       <span id = "monthList-item${item.id}">${item.name}</span>
         <div class="list">
         </div>

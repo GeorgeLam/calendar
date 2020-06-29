@@ -156,6 +156,20 @@ body {
     
 }
 
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb{
+    background: white;
+} 
+
+.monthEvents{
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .singleItem, .singleMonthItem{
     display: flex;
     flex-direction: row;
@@ -186,6 +200,10 @@ body {
     color: #fefcf9;
     font-family: 'Lato', sans-serif;
     word-wrap: break-word;
+}
+
+.monthItemText{
+    margin: 10px auto;
 }
 
 #itemEditor{
@@ -246,13 +264,32 @@ display: block;
 /*      LEFT PANE ENDS      */
 
 #cal{
-    margin: auto;
+    margin: 4em auto;
     width: 60%;
-    height: 65vh;
+    height: 80vh;
 }
 
 .weekdays{
     display: flex;
+}
+
+
+
+.returnMonth{
+    visibility: hidden;
+    color: rgba(196, 196, 196, 0.699);
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    user-select: none;
+    cursor: pointer;
+    width: 20vw;
+    margin: auto;
+    transition-duration: 200ms;
+    transition-property: color;
+}
+
+.returnMonth:hover{
+    color: white;
 }
 
 .monthLine{
@@ -289,7 +326,7 @@ h1{
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 0;
-    height: 90%;
+    height: 80%;
     width: 100%;
     color: white;
     font-family: 'Lato', sans-serif;
@@ -306,16 +343,22 @@ h1{
 
 .currentDate{
     text-decoration: underline;
+    color: red;
 }
 
 
 .currentlySelected{
-    border: rgba(189, 189, 255, 0.705) 2px solid;
+    border: rgba(189, 189, 255, 0.705) 0px solid;
 }
 
 .dayNum span{
     padding:0;
     margin: 0;
+}
+
+.dayNum{
+    transition-duration: 200ms;
+    transition-property: background-color;
 }
 
 #calendar .dayNum:hover{
