@@ -9,7 +9,8 @@ let daysEvents = document.querySelector("#daysEvents")
 let listOptions = document.querySelector(".listOptions")
 let backMonth = document.querySelector("#backMonth"), forwardMonth = document.querySelector("#forwardMonth")
 let editMode = 0;
-
+let monthEvents = document.querySelector(".monthEvents");
+let monthListItems = document.querySelector("#monthListItems");
 
 
 let calendar = document.querySelector("#calendar");
@@ -19,8 +20,9 @@ currentMonth = dateObj.getMonth();
 currentYear = dateObj.getFullYear();
 
 
-newerDATE = new Date(2020,05,17)///////////
-currentDAY = newerDATE.getUTCDay();
+newerDATE = new Date(2020,05,30)///////////
+console.log(newerDATE);
+currentDAY = newerDATE.getDay();
 console.log(currentDAY);
 
 document.querySelector(".todayDate").innerText = dateObj.getDate();
@@ -31,26 +33,33 @@ let monthHas30Days = [3, 5, 8, 10];
 
 //rewrite this function to spit out amt of days in a given month. then call this function on today's month, in order to return dIM (important var!!!)
 
-function daysInGivenMonth(month){
+function daysInGivenMonth(year, month){
   //thisMonth = dateObj.getMonth(); //calculating number of days in the month
-  month == 1 && (dateObj.getFullYear() % 4 == 0) ? daysInMonth = 29 
-    : month == 1 && (dateObj.getFullYear() % 4 !== 0) ? daysInMonth = 28
+  month == 1 && (year % 4 == 0) ? daysInMonth = 29 
+    : month == 1 && (year % 4 !== 0) ? daysInMonth = 28
   : monthHas30Days.includes(month) ? daysInMonth = 30 
   : daysInMonth = 31;
   return daysInMonth;
 }
+
+//dayOfWeek offset for the start of each month:
+function getFirstDayOfMonth(year, month) {
+  currentMonthDateObj = new Date(year, month, 00)
+  return firstDayOfMonth = currentMonthDateObj.getDay() + 1;
+}
+  //if 0 = Sunday, so no offset.
 
 function monthName(month){
   names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   return names[month]
 }
 
-daysInMonth = daysInGivenMonth(dateObj.getMonth())
+daysInMonth = daysInGivenMonth(currentYear, currentMonth)
 
 class Month {
   constructor(monthNum) {
     this.name = monthName(monthNum);
-    this.dayCount = daysInGivenMonth(monthNum);
+    this.dayCount = daysInGivenMonth(currentYear, monthNum);
   }
 }
 
@@ -69,16 +78,42 @@ function createMonth(daysInMonth){
     calendar.removeChild(calendar.lastChild);
   }
 
+  firstDayOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
+
+  for (let i = 0; i < firstDayOfMonth && firstDayOfMonth !== 7; i++){
+    let dates = document.createElement("DIV");
+    dates.textContent = daysInGivenMonth(currentYear, currentMonth-1)-firstDayOfMonth+i+1;
+    dates.className = "prevMonthDayNum"
+    calendar.appendChild(dates)
+  };
+
+  //Creating text for each day in the given month
+
   for (let i = 1; i <= daysInMonth; i++) {
       let dates = document.createElement("DIV");
       dates.textContent = i;
       dates.className = "dayNum"
       calendar.appendChild(dates)
-      if (i==dateObj.getDate() && dateObj.getMonth() == currentMonth){
+      if (i==dateObj.getDate() && dateObj.getMonth() == currentMonth && dateObj.getFullYear() == currentYear){
         dates.classList.add("today")
         console.log(dates.classList);
-        document.querySelector(".today").style.color = "red"}
+        document.querySelector(".today").classList.add("currentDate")}
   }
+
+
+  //Placeholder dates for days in upcoming month
+  remainderSpaceLimit = ((getFirstDayOfMonth(currentYear, currentMonth) + daysInGivenMonth(currentYear, currentMonth))>35)?42:35;
+  console.log(remainderSpaceLimit);
+  for (let i = 1; i <= (remainderSpaceLimit - (getFirstDayOfMonth(currentYear, currentMonth) + daysInGivenMonth(currentYear, currentMonth))); i++) {
+    console.log(35 - (getFirstDayOfMonth(currentYear, currentMonth) + daysInGivenMonth(currentYear, currentMonth)))
+    console.log(i + firstDayOfMonth)
+    console.log(getFirstDayOfMonth(currentYear, currentMonth + 1))
+    let dates = document.createElement("DIV");
+    dates.textContent = i;
+    dates.className = "prevMonthDayNum"
+    calendar.appendChild(dates)
+  };
+  
 }
 
 createMonth(daysInMonth);
@@ -106,6 +141,8 @@ function showPrevMonth (){
   document.querySelector(".monthYear").innerText = `${switchedMonth.name} ${currentYear}`
   
   dateActivate();
+  updateMonthList();
+  cancelSelected();
 }
 
 
@@ -123,6 +160,9 @@ function showNextMonth() {
   document.querySelector(".monthYear").innerText = `${switchedMonth.name} ${currentYear}`
 
   dateActivate();
+  updateMonthList();
+  cancelSelected();
+
 }
 
 //////////////////////
@@ -149,14 +189,21 @@ function dateActivate(){
   console.log("activating days!!")
   console.log(dayNum);
   dayNum.forEach(item => {
-      item.addEventListener("click", () => { 
+      item.addEventListener("click", (e) => { 
+      dayNum.forEach(item => {item.classList.remove("currentlySelected")});
       document.querySelector("#daysEventsTop").style.visibility = "visible";
         document.querySelector("#listContainer").style.visibility = "visible";  
       console.log(item.innerText)
+      e.target.classList.add("currentlySelected")
+        console.log(e.target.classList)
+
+      monthEvents.style.display = "none";
       daysEvents.style.visibility = "visible";
       eventAdd.addEventListener("click", () =>{
         eventAdd.placeholder = "";
       })
+
+
 
       let eventAdder = document.querySelector("#addEventTitle")
         eventAdder.innerHTML = `<span class="inlineText">Add an event to <span class="inlineText"> ${monthName(currentMonth)} ${item.innerText}`
@@ -174,10 +221,15 @@ function dateActivate(){
 
 dateActivate();
 
-document.querySelector(".cancelSelected").addEventListener("click", () =>{
-  daysEvents.style.visibility = "hidden"
-}
-);
+document.querySelector(".cancelSelected").addEventListener("click", cancelSelected)
+
+
+function cancelSelected(){
+  console.log("hide button pressed")
+  document.querySelector(".monthEvents").style.display = "block";
+  daysEvents.style.visibility = "hidden";
+  document.querySelector(".currentlySelected").style.border = "none";
+};
 
 //let currentItems = 0;
 let items = [];
@@ -185,8 +237,9 @@ let items = [];
 class ListItem {
   constructor(name) {
     this.date = clickedDate;
-    this.month = currentMonth; 
-    this.id = items.length;
+    this.month = currentMonth;
+    this.year = currentYear; 
+    this.id = currentYear.toString() + currentMonth.toString() + clickedDate.toString() + items.length.toString();
     this.name = name;
     this.color = "#000000";
     console.log(items)
@@ -209,7 +262,7 @@ function addListItem () {
 
 function buttonActivate () {
   console.log("Activating buttons!")
-  itemsOnThisDay = items.filter(item => item.date == clickedDate && item.month == currentMonth)
+  itemsOnThisDay = items.filter(item => item.date == clickedDate && item.month == currentMonth && item.year == currentYear)
   console.log("Amt of items today: " + itemsOnThisDay.length);
 
   if (document.querySelectorAll(".itemText").length != 0 && document.querySelectorAll(".listOptions").length != 0){
@@ -229,8 +282,11 @@ function editItem(e){
   }
 
   parentIdName = e.path[pathNum].id
-  let parentIdNum = parentIdName[parentIdName.length-1]
+  console.log(parentIdName) //jun 2 event 0 == 2020520
+  let parentIdNum = parentIdName.slice(9);
+  console.log(parentIdNum)
   let parentEl = document.querySelector(`#list-text${parentIdNum}`);
+  console.log(parentEl)
 
   if (editMode == 0 && document.querySelectorAll("#itemEditor").length < 1){
     console.log("New box made")
@@ -250,7 +306,7 @@ function editItem(e){
   saveEdit.innerText = "Save Edit"
   //parentEl.appendChild(saveEdit)
 
-  document.querySelector(`#list-item${parentIdNum}`).style.display = "none";
+    document.querySelector(`#list-item${parentIdNum}`).style.display = "none";
  
   for (i = 0; i < parentEl.children.length; i++){
     if (/saveItem/.test(parentEl.children[i].id)){saveBtnPath = i};
@@ -281,13 +337,14 @@ function editItem(e){
 
 
 function delItem(e) {
+  console.log(items);
   console.log(e.path[2].children[0].id)
 
   parentIdName = e.path[2].children[0].id 
   console.log("The ID number is: " + parentIdName)
-  let parentIdNum = parentIdName[parentIdName.length - 1]
+  let parentIdNum = parentIdName.slice(9)
   s = items.map(item => (item.id == parentIdNum))
-
+  console.log(s);
   items.splice(s.indexOf(true), 1);
   console.log(items)
   updateList();
@@ -297,7 +354,7 @@ function updateList(){
   console.log("Now updating...")
   listItems.innerHTML = "";
   items.forEach((item, id) => {
-    (item.date == clickedDate && item.month == currentMonth) ? listItems.innerHTML += 
+    (item.date == clickedDate && item.month == currentMonth && item.year == currentYear) ? listItems.innerHTML += 
     `<li class = "singleItem">
       <div class="itemText" id="list-text${item.id}"><span id = "list-item${item.id}">${item.name}</span>
       <div class="list">
@@ -312,4 +369,27 @@ function updateList(){
   }
   )
   buttonActivate();
+  updateMonthList();
+}
+
+function updateMonthList(){
+  monthListItems.innerHTML = "";
+  
+  items.forEach((item, id) => {
+    if (item.month == currentMonth && item.year == currentYear){
+      
+      
+      monthListItems.innerHTML +=
+      `<li class = "singleMonthItem">
+      <h4>On ${monthName(currentMonth)} ${item.date}:</h4>
+
+      <div class="monthItemText" id="month-text${item.id}">
+      <span id = "monthList-item${item.id}">${item.name}</span>
+        <div class="list">
+        </div>
+      
+      </div>
+      </li>`}
+      }
+  )
 }

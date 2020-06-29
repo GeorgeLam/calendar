@@ -156,7 +156,7 @@ body {
     
 }
 
-.singleItem{
+.singleItem, .singleMonthItem{
     display: flex;
     flex-direction: row;
     min-height: 35px;
@@ -165,11 +165,17 @@ body {
     align-items: stretch;
 }
 
+.singleMonthItem{
+    flex-direction: column;
+}
+
 .singleItem:hover{
     cursor: pointer;
 }
 
-.itemText, #itemEditor{
+
+
+.itemText, .monthItemText, #itemEditor{
     background: rgba(185, 185, 185, 0.47);
     border: green 0px solid;
     border-radius: 5px;
@@ -222,8 +228,17 @@ padding-right: 2em;
 display: block;
 }
 
+/*      MONTH EVENTS PANEL      */
 
+.monthEvents{
+    height: 50vh;
+    visibility: visible;
+}
 
+.monthEvents h3, .monthEvents h4{
+    text-align: center;
+    padding-bottom: 5px;
+}
 
 
 
@@ -254,6 +269,11 @@ display: block;
     color: white;
 }
 
+.monthYear, .todayDate, .todayDay, .day, .dayNum, #backMonth, #forwardMonth, .prevMonthDayNum{
+    cursor: default;
+    user-select: none;
+}
+
 #backMonth, #forwardMonth{
     cursor: pointer;
 }
@@ -275,13 +295,22 @@ h1{
     font-family: 'Lato', sans-serif;
 }
 
-#calendar .day, .dayNum{
+#calendar .day, .dayNum, .prevMonthDayNum{
     box-sizing: border-box;
     cursor: default;
     text-align: center;
     justify-content: center;
     align-content: center;
     padding: 1em;
+}
+
+.currentDate{
+    text-decoration: underline;
+}
+
+
+.currentlySelected{
+    border: rgba(189, 189, 255, 0.705) 2px solid;
 }
 
 .dayNum span{
@@ -292,4 +321,8 @@ h1{
 #calendar .dayNum:hover{
     background-color: rgba(165, 165, 165, 0.425);
     cursor: pointer;
+}
+
+.prevMonthDayNum{
+    color: rgba(214, 214, 214, 0.55);
 }
