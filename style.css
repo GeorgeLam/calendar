@@ -156,16 +156,7 @@ body {
     
 }
 
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-thumb{
-    background: white;
-} 
-
 .monthEvents{
-
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -186,8 +177,6 @@ body {
 .singleItem:hover{
     cursor: pointer;
 }
-
-
 
 .itemText, .monthItemText, #itemEditor{
     background: rgba(185, 185, 185, 0.47);
@@ -369,3 +358,11 @@ h1{
 .prevMonthDayNum{
     color: rgba(214, 214, 214, 0.55);
 }
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb{
+    background: white;
+} 

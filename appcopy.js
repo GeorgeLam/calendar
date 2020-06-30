@@ -22,6 +22,7 @@ viewingMonth = presentMonth;
 viewingYear = presentYear;
 
 
+
 newerDATE = new Date(2020,05,30)///////////
 console.log(newerDATE);
 currentDAY = newerDATE.getDay();
@@ -65,22 +66,24 @@ class Month {
   }
 }
 
+
+//    Return to current month button    //
 document.querySelector(".returnMonth").addEventListener("click", () => {
-document.querySelector(".returnMonth").style.visibility = "hidden";
-viewingMonth = presentMonth;
-viewingYear = presentYear;
+  document.querySelector(".returnMonth").style.visibility = "hidden";
+  viewingMonth = presentMonth;
+  viewingYear = presentYear;
 
 
-console.log(viewingMonth);
-switchedMonth = new Month(viewingMonth);
-console.log(switchedMonth);
-createMonth(switchedMonth.dayCount);
-document.querySelector(".monthYear").innerText = `${switchedMonth.name} ${viewingYear}`
+  console.log(viewingMonth);
+  switchedMonth = new Month(viewingMonth);
+  console.log(switchedMonth);
+  createMonth(switchedMonth.dayCount);
+  document.querySelector(".monthYear").innerText = `${switchedMonth.name} ${viewingYear}`
 
-dateActivate();
-updateMonthList();
-//cancelSelected();
-}
+  dateActivate();
+  updateMonthList();
+  cancelSelected();
+  }
 );
 
 function createMonth(daysInMonth){
@@ -234,7 +237,9 @@ function dateActivate(){
           clickedDate = itemInner;
           console.log(clickedDate);
           updateList();
+          updateMonthList();
           eventAdd.placeholder = "What's on today?"
+
         }
       )
     }
@@ -254,7 +259,11 @@ function cancelSelected(){
 };
 
 //let currentItems = 0;
-let items = [];
+//let items = [];
+
+
+JSON.parse(localStorage.getItem("calData")) ? items = JSON.parse(localStorage.getItem("calData")) : items = [];
+updateMonthList();
 
 class ListItem {
   constructor(name) {
@@ -374,6 +383,7 @@ function delItem(e) {
 
 function updateList(){
   console.log("Now updating...")
+  localStorage.setItem("calData", JSON.stringify(items));
   listItems.innerHTML = "";
   items.forEach((item, id) => {
     (item.date == clickedDate && item.month == viewingMonth && item.year == viewingYear) ? listItems.innerHTML += 
