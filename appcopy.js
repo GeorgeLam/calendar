@@ -59,6 +59,9 @@ function monthName(month){
 
 daysInMonth = daysInGivenMonth(viewingYear, viewingMonth)
 
+// Setting month and year for present month
+$(".monthYear").text(`${monthName(presentMonth)} ${presentYear}`)
+
 class Month {
   constructor(monthNum) {
     this.name = monthName(monthNum);
@@ -215,6 +218,8 @@ function dateActivate(){
   console.log(dayNum);
   dayNum.forEach(item => {
       item.addEventListener("click", (e) => { 
+        $("#daysEventsTop").fadeIn(350); 
+
       dayNum.forEach(item => {item.classList.remove("currentlySelected")});
       document.querySelector("#daysEventsTop").style.visibility = "visible";
         document.querySelector("#listContainer").style.visibility = "visible";  
@@ -252,10 +257,8 @@ document.querySelector(".cancelSelected").addEventListener("click", cancelSelect
 
 
 function cancelSelected(){
-  console.log("hide button pressed")
-  document.querySelector(".monthEvents").style.display = "block";
-  daysEvents.style.visibility = "hidden";
-  //document.querySelector(".currentlySelected").style.border = "none";
+  $("#daysEventsTop").fadeOut(300); 
+  $(".monthEvents").delay(300).fadeIn(300);
 };
 
 //let currentItems = 0;
