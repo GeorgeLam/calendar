@@ -72,18 +72,12 @@ class Month {
 
 //    Return to current month button    //
 
-//   viewingMonth = presentMonth;
-//   viewingYear = presentYear;
-// })
-// document.querySelector(".returnMonth").addEventListener("click", () => {
-//   document.querySelector(".returnMonth").style.visibility = "hidden";
-
 $(".returnMonth").click(() => {
+  $("#calendar").fadeOut(20).fadeIn(180);
   $(".returnMonth").css("visibility", "hidden");
 
   viewingMonth = presentMonth;
   viewingYear = presentYear;
-
 
   console.log(viewingMonth);
   switchedMonth = new Month(viewingMonth);
@@ -147,6 +141,8 @@ $(backMonth).click(showPrevMonth);
 $(forwardMonth).click(showNextMonth);
 
 function showPrevMonth (){
+  $("#calendar").fadeOut(20).fadeIn(180);
+
   if (viewingMonth == 0){
     viewingMonth = 11;
     viewingYear --;
@@ -160,7 +156,7 @@ function showPrevMonth (){
   console.log(switchedMonth);
   createMonth(switchedMonth.dayCount);
   $('.monthYear').text(`${switchedMonth.name} ${viewingYear}`)
-  
+
   if (viewingMonth !== presentMonth || viewingYear !== presentYear){
     $('.returnMonth').css('visibility', 'visible')
   } else {
@@ -174,6 +170,8 @@ function showPrevMonth (){
 
 
 function showNextMonth() {
+  $("#calendar").fadeOut(20).fadeIn(180);
+
   if (viewingMonth == 11) {
     viewingMonth = 0;
     viewingYear++;
@@ -197,12 +195,9 @@ function showNextMonth() {
   dateActivate();
   updateMonthList();
   cancelSelected();
-
 }
 
 //////////////////////
-
-
 
 
 function showMonthEvents(){
@@ -214,16 +209,13 @@ function showMonthEvents(){
 
 //showMonthEvents();
 
-
-
-
 function dateActivate(){
   let dayNum = document.querySelectorAll(".dayNum");
   console.log("activating days!!")
   console.log(dayNum);
   dayNum.forEach(item => {
       item.addEventListener("click", (e) => { 
-        $("#daysEventsTop").fadeIn(350); 
+        $("#daysEventsTop").fadeIn(150); 
 
       dayNum.forEach(item => {item.classList.remove("currentlySelected")});
       document.querySelector("#daysEventsTop").style.visibility = "visible";
@@ -237,8 +229,6 @@ function dateActivate(){
       eventAdd.addEventListener("click", () =>{
         eventAdd.placeholder = "";
       })
-
-
 
       let eventAdder = document.querySelector("#addEventTitle")
         eventAdder.innerHTML = `<span class="inlineText">Add an event to <span class="inlineText"> ${monthName(viewingMonth)} ${item.innerText}`
@@ -260,15 +250,10 @@ dateActivate();
 
 document.querySelector(".cancelSelected").addEventListener("click", cancelSelected)
 
-
 function cancelSelected(){
-  $("#daysEventsTop").fadeOut(300); 
-  $(".monthEvents").delay(300).fadeIn(300);
+  $("#daysEventsTop").fadeOut(150); 
+  $(".monthEvents").delay(150).fadeIn(150);
 };
-
-//let currentItems = 0;
-//let items = [];
-
 
 JSON.parse(localStorage.getItem("calData")) ? items = JSON.parse(localStorage.getItem("calData")) : items = [];
 updateMonthList();
@@ -363,11 +348,12 @@ function editItem(e){
     s = items.map(item => (item.id == parentIdNum))
     items[s.indexOf(true)].name = editBox.value;
     console.log(items);
-    updateList(); }
+    updateList(); 
+  }
 
   //e.path[pathNum].children[saveBtnPath].addEventListener("click", acceptEdit)
   
-    editBox.addEventListener("keyup", e => { if (e.keyCode === 13 && editBox.value != "") acceptEdit()})
+  editBox.addEventListener("keyup", e => { if (e.keyCode === 13 && editBox.value != "") acceptEdit()})
 
   editMode = 0;
 
@@ -382,6 +368,7 @@ function delItem(e) {
   parentIdName = e.path[2].children[0].id 
   console.log("The ID number is: " + parentIdName)
   let parentIdNum = parentIdName.slice(9)
+  console.log("Del is looking for " + parentIdNum)
   s = items.map(item => (item.id == parentIdNum))
   console.log(s);
   items.splice(s.indexOf(true), 1);
@@ -411,8 +398,6 @@ function updateList(){
   buttonActivate();
   updateMonthList();
 }
-
-
 
 function updateMonthList(){
   monthListItems.innerHTML = "";
