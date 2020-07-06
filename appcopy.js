@@ -71,8 +71,16 @@ class Month {
 
 
 //    Return to current month button    //
-document.querySelector(".returnMonth").addEventListener("click", () => {
-  document.querySelector(".returnMonth").style.visibility = "hidden";
+
+//   viewingMonth = presentMonth;
+//   viewingYear = presentYear;
+// })
+// document.querySelector(".returnMonth").addEventListener("click", () => {
+//   document.querySelector(".returnMonth").style.visibility = "hidden";
+
+$(".returnMonth").click(() => {
+  $(".returnMonth").css("visibility", "hidden");
+
   viewingMonth = presentMonth;
   viewingYear = presentYear;
 
@@ -81,7 +89,7 @@ document.querySelector(".returnMonth").addEventListener("click", () => {
   switchedMonth = new Month(viewingMonth);
   console.log(switchedMonth);
   createMonth(switchedMonth.dayCount);
-  document.querySelector(".monthYear").innerText = `${switchedMonth.name} ${viewingYear}`
+  $(".monthYear").text(`${switchedMonth.name} ${viewingYear}`)
 
   dateActivate();
   updateMonthList();
@@ -128,18 +136,15 @@ function createMonth(daysInMonth){
     dates.textContent = i;
     dates.className = "prevMonthDayNum"
     calendar.appendChild(dates)
-  };
-  
+  };  
 }
 
 createMonth(daysInMonth);
 
-
 ////////BACK AND FWD MONTH FUNCTIONALITY/////
 
-backMonth.addEventListener("click", showPrevMonth)
-forwardMonth.addEventListener("click", showNextMonth)
-
+$(backMonth).click(showPrevMonth);
+$(forwardMonth).click(showNextMonth);
 
 function showPrevMonth (){
   if (viewingMonth == 0){
@@ -154,12 +159,12 @@ function showPrevMonth (){
   switchedMonth = new Month(viewingMonth);
   console.log(switchedMonth);
   createMonth(switchedMonth.dayCount);
-  document.querySelector(".monthYear").innerText = `${switchedMonth.name} ${viewingYear}`
+  $('.monthYear').text(`${switchedMonth.name} ${viewingYear}`)
   
   if (viewingMonth !== presentMonth || viewingYear !== presentYear){
-      document.querySelector(".returnMonth").style.visibility = "visible";
-  } else{
-    document.querySelector(".returnMonth").style.visibility = "hidden";
+    $('.returnMonth').css('visibility', 'visible')
+  } else {
+    $('.returnMonth').css('visibility', 'hidden')
   }
 
   dateActivate();
@@ -181,12 +186,12 @@ function showNextMonth() {
   switchedMonth = new Month(viewingMonth);
   console.log(switchedMonth);
   createMonth(switchedMonth.dayCount);
-  document.querySelector(".monthYear").innerText = `${switchedMonth.name} ${viewingYear}`
+  $(".monthYear").text(`${switchedMonth.name} ${viewingYear}`)
 
   if (viewingMonth !== presentMonth || viewingYear !== presentYear) {
-    document.querySelector(".returnMonth").style.visibility = "visible";
+    $('.returnMonth').css('visibility', 'visible')
   } else {
-    document.querySelector(".returnMonth").style.visibility = "hidden";
+    $('.returnMonth').css('visibility', 'hidden')
   }
 
   dateActivate();
